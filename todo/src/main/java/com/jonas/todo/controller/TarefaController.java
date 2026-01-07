@@ -2,6 +2,9 @@ package com.jonas.todo.controller;
 
 import com.jonas.todo.model.Tarefa;
 import com.jonas.todo.service.TarefaService;
+import com.jonas.todo.dto.TarefaCreateDTO;
+import com.jonas.todo.dto.TarefaResponseDTO;
+import com.jonas.todo.dto.TarefaUpdateDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,14 +21,16 @@ public class TarefaController {
     private final TarefaService tarefaService;
 
     @PostMapping
-    public ResponseEntity<Tarefa> criar(@Valid @RequestBody Tarefa tarefa) {
-        Tarefa criada = tarefaService.criar(tarefa);
+    public ResponseEntity<Tarefa> criar(@Valid @RequestBody TarefaCreateDTO dto) {
+        Tarefa criada = tarefaService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(criada);
     }
 
-    @GetMapping ResponseEntity<List<Tarefa>> listarTodas() {
+    @GetMapping
+    public ResponseEntity<List<Tarefa>> listarTodas() {
         return ResponseEntity.ok(tarefaService.listarTodas());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Tarefa> buscarPorId(@PathVariable Long id) {
@@ -35,16 +40,29 @@ public class TarefaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizar(
+    public ResponseEntity<TarefaResponseDTO> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody Tarefa tarefa) {
-        Tarefa aturalizada = tarefaService.atualizar(id, tarefa);
-        return ResponseEntity.ok(aturalizada);
+            @RequestBody @Valid TarefaUpdateDTO dto) {
+
+        Tarefa tarefa = tarefaService.atualizar(id, dto);
+
+        return ResponseEntity.ok(toResponseDTO(tarefa));
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable long id) {
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
         tarefaService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private TarefaResponseDTO toResponseDTO(Tarefa tarefa) {
+        return new TarefaResponseDTO(
+                tarefa.getId(),
+                tarefa.getTitulo(),
+                tarefa.getDescricao(),
+                tarefa.getConcluida(),
+                tarefa.getDataCriacao()
+        );
     }
 }

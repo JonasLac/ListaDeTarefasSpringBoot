@@ -1,4 +1,3 @@
-// java
 package com.jonas.todo.model;
 
 import jakarta.persistence.*;

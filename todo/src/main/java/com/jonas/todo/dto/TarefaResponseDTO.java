@@ -18,5 +18,10 @@ public class TarefaResponseDTO {
     private LocalDateTime dataCriacao;
 
     public TarefaResponseDTO(Long id, @NotBlank String titulo, String descricao, @NotNull Boolean concluida, LocalDateTime dataCriacao) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.concluida = concluida;
+        this.dataCriacao = dataCriacao;
     }
 }

@@ -1,5 +1,6 @@
 package com.jonas.todo.controller;
 
+import com.jonas.todo.mapper.TarefaMapper;
 import com.jonas.todo.model.Tarefa;
 import com.jonas.todo.service.TarefaService;
 import com.jonas.todo.dto.TarefaCreateDTO;
@@ -19,11 +20,13 @@ import java.util.List;
 public class TarefaController {
 
     private final TarefaService tarefaService;
+    private final TarefaMapper mapper;
+
 
     @PostMapping
-    public ResponseEntity<Tarefa> criar(@Valid @RequestBody TarefaCreateDTO dto) {
-        Tarefa criada = tarefaService.criar(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(criada);
+    public ResponseEntity<TarefaResponseDTO> criar(@Valid @RequestBody TarefaCreateDTO dto) {
+        Tarefa tarefa = tarefaService.criar(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponseDTO(tarefa));
     }
 
     @GetMapping

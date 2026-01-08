@@ -8,6 +8,8 @@ import com.jonas.todo.dto.TarefaResponseDTO;
 import com.jonas.todo.dto.TarefaUpdateDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +31,10 @@ public class TarefaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponseDTO(tarefa));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Tarefa>> listarTodas() {
-        return ResponseEntity.ok(tarefaService.listarTodas());
-    }
+//    @GetMapping
+//    public ResponseEntity<List<Tarefa>> listarTodas() {
+//        return ResponseEntity.ok(tarefaService.listarTodas());
+//    }
 
 
     @GetMapping("/{id}")
@@ -67,5 +69,14 @@ public class TarefaController {
                 tarefa.getConcluida(),
                 tarefa.getDataCriacao()
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<TarefaResponseDTO>> listar(Pageable pageable) {
+        Page<Tarefa> tarefa = tarefaService.listar(pageable);
+
+        Page<TarefaResponseDTO> response = tarefa.map(mapper::toResponseDTO);
+
+        return ResponseEntity.ok(response);
     }
 }

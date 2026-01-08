@@ -7,6 +7,8 @@ import com.jonas.todo.repository.TarefaRepository;
 import com.jonas.todo.dto.TarefaCreateDTO;
 import com.jonas.todo.dto.TarefaUpdateDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -78,6 +80,10 @@ public class TarefaService {
             throw new TarefaNaoEncontradaException(id);
         }
         tarefaRepository.deleteById(id);
+    }
+
+    public Page<Tarefa> listar(Pageable pageable) {
+        return tarefaRepository.findAll(pageable);
     }
 
 }
